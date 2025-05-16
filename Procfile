@@ -1,0 +1,1 @@
+web: java -Djava.home=/usr/lib/jvm/java-21-openjdk -jar target/*.jar
