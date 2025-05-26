@@ -1,10 +1,15 @@
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
-COPY .mvn/ .mvn
+
+# Copy only the files needed for dependency resolution
+COPY .mvn .mvn
 COPY mvnw pom.xml ./
 RUN ./mvnw dependency:go-offline
-COPY src ./src
+
+# Copy source code and build
+COPY src src
 RUN ./mvnw clean package -DskipTests
-CMD ["java", "-jar", "target/*.jar", "--server.port=${PORT}"]
-# Add this to Dockerfile for debugging:
-RUN ls -la target/  # Verify JAR exists after build
+
+# Explicitly name the JAR file (critical fix)
+RUN ls -la target/  # Debug: Verify JAR exists
+CMD ["java", "-jar", "target/quiz.jar", "--server.port=${PORT}"]
